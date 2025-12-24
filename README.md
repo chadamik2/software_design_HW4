@@ -219,8 +219,8 @@ docker compose up --build
 ### 3. Доступ к сервисам
 
 * Frontend: http://localhost:3000/
-* Orders API (Swagger): [http://localhost/api/orders/docs](http://localhost/api/orders/docs)
-* Payments API (Swagger): [http://localhost/api/payments/docs](http://localhost/api/payments/docs)
+* Orders API (Swagger): http://localhost:8080/orders/docs
+* Payments API (Swagger): http://localhost:8080/payments/docs
 * RabbitMQ UI: [http://localhost:15672](http://localhost:15672)
 
 ---
