@@ -1,0 +1,179 @@
+{
+  "info": {
+    "name": "Gozon Microservices",
+    "_postman_id": "b57e98c2-0d23-4bde-9a5e-0ddf0b8c0b01",
+    "description": "Orders + Payments via Gateway",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create account",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "user-1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/accounts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "accounts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Balance",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "user-1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/accounts/balance",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "accounts",
+            "balance"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Topup",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "user-1"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": \"200.00\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/accounts/topup",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "accounts",
+            "topup"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "user-1"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": \"50.00\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "orders"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List orders",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-User-Id",
+            "value": "user-1"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "orders"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Swagger Orders",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/orders/docs",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "orders",
+            "docs"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Swagger Payments",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/payments/docs",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "payments",
+            "docs"
+          ]
+        }
+      }
+    }
+  ]
+}

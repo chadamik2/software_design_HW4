@@ -1,0 +1,87 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: gozon
+      POSTGRES_PASSWORD: gozon
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gozon -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7.2-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  orders:
+    build: ./orders_service
+    environment:
+      SERVICE_NAME: orders
+      DATABASE_URL: postgresql+asyncpg://gozon:gozon@postgres:5432/orders_db
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      REDIS_URL: redis://redis:6379/0
+      OUTBOX_POLL_INTERVAL: "1.0"
+      OUTBOX_BATCH_SIZE: "50"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  payments:
+    build: ./payments_service
+    environment:
+      SERVICE_NAME: payments
+      DATABASE_URL: postgresql+asyncpg://gozon:gozon@postgres:5432/payments_db
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      OUTBOX_POLL_INTERVAL: "1.0"
+      OUTBOX_BATCH_SIZE: "50"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  gateway:
+    image: nginx:1.25-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - orders
+      - payments
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+
+volumes:
+  postgres_data:
