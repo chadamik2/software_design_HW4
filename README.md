@@ -206,7 +206,7 @@ docker compose version
 ```bash
 
 git clone https://github.com/chadamik2/software_design_HW4.git
-cd software_design_HW3/src
+cd software_design_HW4/src
 
 ```
 
